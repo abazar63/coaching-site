@@ -105,7 +105,7 @@ export default function Page() {
         <div className="rounded-2xl border border-neutral-200 p-2 max-w-3xl mx-auto">
           <iframe
             title="Calendly"
-            src="https://calendly.com/your-calendly-username/60min?hide_gdpr_banner=1&primary_color=000000"
+            src="https://calendly.com/abazar63/60min?hide_gdpr_banner=1&primary_color=000000"
             className="h-[680px] w-full rounded-xl"
           />
         </div>
