@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const packages = [
   {
@@ -40,68 +42,81 @@ export default function Page() {
     } catch (e) {
       console.error(e);
       alert("Something went wrong starting checkout.");
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   }
 
   return (
-    <main className="grid gap-8 md:grid-cols-2">
-      <section className="space-y-4">
-        <h1 className="text-3xl font-semibold">Book a Coaching Session</h1>
-        <p className="text-sm text-neutral-600">
-          Pay securely, then pick a time. Instant payment capture via Stripe. You’ll get
-          email confirmations for both payment and booking.
+    <main className="space-y-12">
+      {/* Hero Section with Logo */}
+      <section className="flex flex-col items-center text-center space-y-4">
+        <Image
+          src="/logo.png" // place your BrazenLife Coaching logo in /public/logo.png
+          alt="BrazenLife Coaching Logo"
+          width={120}
+          height={120}
+          className="rounded-full"
+        />
+        <h1 className="text-4xl font-bold tracking-tight">BrazenLife Coaching</h1>
+        <p className="text-lg text-neutral-600 max-w-xl">
+          Live boldly. Transform deeply. Book a coaching session today and start your journey.
         </p>
+      </section>
 
-        <div className="grid gap-3">
-          {packages.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setSelected(p)}
-              className={`rounded-2xl border p-4 text-left shadow-sm transition hover:shadow ${
-                selected.id === p.id ? "border-black" : "border-neutral-200"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-lg font-medium">{p.name}</div>
-                  <div className="text-sm text-neutral-600">{p.blurb}</div>
-                </div>
-                <input type="radio" className="h-5 w-5" checked={selected.id === p.id} readOnly />
+      {/* Packages */}
+      <section className="grid gap-6 md:grid-cols-3">
+        {packages.map((p) => (
+          <button
+            key={p.id}
+            onClick={() => setSelected(p)}
+            className={`rounded-2xl border p-6 text-left shadow-md transition hover:shadow-lg ${
+              selected.id === p.id ? "border-black bg-neutral-50" : "border-neutral-200 bg-white"
+            }`}
+          >
+            <div className="flex flex-col h-full justify-between">
+              <div>
+                <div className="text-xl font-semibold">{p.name}</div>
+                <div className="text-sm text-neutral-600 mt-2">{p.blurb}</div>
               </div>
-            </button>
-          ))}
-        </div>
+              <div className="mt-4 flex justify-end">
+                <div className={`h-5 w-5 rounded-full border ${selected.id === p.id ? "bg-black" : "bg-white"}`} />
+              </div>
+            </div>
+          </button>
+        ))}
+      </section>
 
+      {/* Checkout button */}
+      <div className="flex justify-center">
         <button
           onClick={checkout}
           disabled={loading}
-          className="w-full rounded-2xl bg-black px-4 py-3 text-white disabled:opacity-60"
+          className="rounded-2xl bg-black px-8 py-4 text-lg font-medium text-white shadow hover:bg-neutral-800 disabled:opacity-60"
         >
           {loading ? "Starting checkout…" : "Pay & Continue"}
         </button>
+      </div>
 
-        <div className="pt-4 text-sm">
-          <a className="underline" href="/refunds">Request a refund</a>
-        </div>
-      </section>
-
+      {/* Booking Section */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Pick a Time</h2>
-        <p className="text-sm text-neutral-600">
-          Bookings are confirmed after payment. You’ll receive a link by email as well.
+        <h2 className="text-2xl font-semibold text-center">Pick a Time</h2>
+        <p className="text-sm text-neutral-600 text-center max-w-md mx-auto">
+          After payment, book your session instantly. You’ll receive an email confirmation with the details.
         </p>
-
-        {/* Replace with your real link */}
-        <div className="rounded-2xl border border-neutral-200 p-2">
+        <div className="rounded-2xl border border-neutral-200 p-2 max-w-3xl mx-auto">
           <iframe
             title="Calendly"
-            src="https://calendly.com/abazar63/30min?hide_gdpr_banner=1&primary_color=000000"
+            src="https://calendly.com/your-calendly-username/60min?hide_gdpr_banner=1&primary_color=000000"
             className="h-[680px] w-full rounded-xl"
           />
         </div>
       </section>
+
+      {/* Refund link */}
+      <div className="text-center text-sm">
+        <Link href="/refunds" className="underline">
+          Request a refund
+        </Link>
+      </div>
     </main>
   );
 }
