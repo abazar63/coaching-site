@@ -7,9 +7,11 @@ export async function POST(req: NextRequest) {
     if (!payment_intent) {
       return NextResponse.json({ error: "payment_intent required" }, { status: 400 });
     }
+
     const refund = await stripe.refunds.create({ payment_intent, reason });
     return NextResponse.json({ id: refund.id, status: refund.status });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
