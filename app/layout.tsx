@@ -15,9 +15,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="sticky top-0 z-30 border-b border-amber-200/60 bg-white/70 backdrop-blur">
           <div className="mx-auto flex max-w-6xl items-center justify-between p-4">
             <Link href="/" className="flex items-center gap-3">
-              {/* Put your logo file in /public/brazenlife-logo.png */}
+              {/* Put your logo file in /public/brazenlife-logo.jpeg (or .png) */}
               <Image
-                src="/brazenlife-logo.png"
+                src="/logo.png"   // <-- DO NOT prefix with /public
                 alt="BrazenLife"
                 width={36}
                 height={36}
