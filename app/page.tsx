@@ -4,21 +4,21 @@ import { useState } from "react";
 const packages = [
   {
     id: "single",
-    name: "Single Session",
+    name: "60 mins Session",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_SINGLE ?? "",
-    blurb: "One 60-min session. Great for quick wins.",
+    blurb: "One 60-min session one on one coaching.",
   },
   {
     id: "pack5",
-    name: "5-Session Pack",
+    name: "90 mins sessions",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_PACKAGE5 ?? "",
-    blurb: "Five 60-min sessions. Save vs single buy.",
+    blurb: "One 90-min session one on one coaching.",
   },
   {
     id: "pack10",
-    name: "10-Session Pack",
+    name: "2 hours session",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_PACKAGE10 ?? "",
-    blurb: "Ten 60-min sessions. Best value.",
+    blurb: "Two hour session one on one coaching..",
   },
 ];
 
