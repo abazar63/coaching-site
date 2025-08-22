@@ -1,10 +1,13 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
+import type Stripe from "stripe";
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const sig = headers().get("stripe-signature");
+
+  // In some Next.js setups, headers() is typed as Promise<ReadonlyHeaders>
+  const sig = (await headers()).get("stripe-signature");
 
   if (!process.env.STRIPE_WEBHOOK_SECRET) {
     return new NextResponse("Webhook secret missing", { status: 500 });
@@ -13,7 +16,7 @@ export async function POST(req: Request) {
     return new NextResponse("Missing Stripe signature header", { status: 400 });
   }
 
-  let event: unknown;
+  let event: Stripe.Event;
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET);
@@ -23,9 +26,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    // Narrow the type after verification
-    const typed = event as Stripe.Event; // optional: add `import type Stripe from "stripe";`
-    switch (typed.type) {
+    switch (event.type) {
       case "checkout.session.completed": {
         // TODO: send email with Calendly link, mark credits, etc.
         break;
