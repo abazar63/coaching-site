@@ -4,19 +4,20 @@ import { useState } from "react";
 export default function RefundPage() {
   const [pi, setPi] = useState("");
   const [reason, setReason] = useState("requested_by_customer");
+  const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  async function submitRefund() {
+  async function submitRequest() {
     setSubmitting(true);
     try {
-      const res = await fetch("/api/refund", {
+      const res = await fetch("/api/refund-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ payment_intent: pi, reason }),
+        body: JSON.stringify({ payment_intent: pi, reason, email }),
       });
       const data = await res.json();
-      if (data.status === "succeeded") alert("Refund created. Check your email.");
-      else alert(data.error || "Could not create refund");
+      if (res.ok) alert("Your refund request was submitted. We'll review it and email you.");
+      else alert(data.error || "Could not submit request");
     } finally {
       setSubmitting(false);
     }
@@ -26,16 +27,26 @@ export default function RefundPage() {
     <main className="mx-auto max-w-xl space-y-4">
       <h1 className="text-2xl font-semibold">Request a Refund</h1>
       <p className="text-sm text-neutral-600">
-        Enter the Payment Intent ID from your receipt email. Refunds follow our policy
-        (see below). Approved refunds are processed immediately via Stripe.
+        Submit a request below. We review each case against our policy and confirm by email.
       </p>
+
+      <label className="block text-sm font-medium">Payment Intent ID</label>
       <input
         value={pi}
         onChange={(e) => setPi(e.target.value)}
         placeholder="pi_123..."
         className="w-full rounded-xl border border-neutral-300 p-3"
       />
-      <label className="block text-sm font-medium">Reason</label>
+
+      <label className="block text-sm font-medium mt-2">Your Email</label>
+      <input
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="you@example.com"
+        className="w-full rounded-xl border border-neutral-300 p-3"
+      />
+
+      <label className="block text-sm font-medium mt-2">Reason</label>
       <select
         value={reason}
         onChange={(e) => setReason(e.target.value)}
@@ -45,12 +56,13 @@ export default function RefundPage() {
         <option value="duplicate">Duplicate</option>
         <option value="fraudulent">Fraudulent</option>
       </select>
+
       <button
-        onClick={submitRefund}
-        disabled={!pi || submitting}
+        onClick={submitRequest}
+        disabled={!pi || !email || submitting}
         className="w-full rounded-2xl bg-black px-4 py-3 text-white disabled:opacity-60"
       >
-        {submitting ? "Submitting…" : "Submit refund"}
+        {submitting ? "Submitting…" : "Submit request"}
       </button>
 
       <section className="rounded-2xl border border-neutral-200 p-4 text-sm text-neutral-700">
@@ -58,11 +70,9 @@ export default function RefundPage() {
         <ul className="list-disc space-y-1 pl-5">
           <li>Full refund if canceled 24 hours before the session start time.</li>
           <li>50% refund if canceled within 24 hours but before the session.</li>
-          <li>No-show: no refund. Edge cases handled at our discretion.</li>
+          <li>No-show: no refund. Edge cases at our discretion.</li>
         </ul>
-        <p className="mt-2">
-          Questions? Email {process.env.NEXT_PUBLIC_COACH_SUPPORT_EMAIL ?? "support@yourdomain.com"}
-        </p>
+        <p className="mt-2">We usually review requests within 2 business days.</p>
       </section>
     </main>
   );
